@@ -202,4 +202,18 @@ class Model: NSObject{
         assert(value != 0)
         tiles[r][c] = value;
     }
+    
+    /** Make a deep copy of the game model, for use in searching. */
+    func clone() -> Model {
+    let g = Model()
+    g.score = score
+   // g.tiles = Array(repeating: Array(repeating: 0, count: Model.size), count: Model.size)
+        for i in 0 ..< Model.size {
+            for j in 0 ..< Model.size {
+    g.tiles[i][j] = tiles[i][j]
+            }
+        }
+    return g
+    }
+
 }

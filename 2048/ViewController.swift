@@ -17,9 +17,9 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
     var headerview: HeaderView!
     var GameModel: Model!
     
-    
-    var tiles = [[TileView]]()
-    
+    let auto = AutoMove()
+    var tiles : [[TileView]] = []
+    let radius: CGFloat = 3
     let slideTime: CGFloat = 0.2
     let flashTime: CGFloat = 0.1
     
@@ -44,11 +44,12 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
         collectionview.register(TileView.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionview.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headerView")
 
-        collectionview.backgroundColor = .white
+        collectionview.backgroundColor = .gray
         collectionview.dataSource = self
         collectionview.delegate = self
         
         view.addSubview(collectionview)
+        
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeRight.direction = UISwipeGestureRecognizerDirection.right
@@ -65,6 +66,7 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         self.view.addGestureRecognizer(swipeUp)
+    
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -80,8 +82,8 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
                 let y = cell.frame.minY
                 let size = cell.frame.width
                 let background = UIView(frame: CGRect(x: x, y: y, width: size, height: size))
-                background.layer.cornerRadius = 6
-                background.backgroundColor = .gray
+                background.layer.cornerRadius = radius
+                background.backgroundColor = .lightGray
                 collectionview.addSubview(background)
                 collectionview.sendSubview(toBack: background)
             }
@@ -98,9 +100,9 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
         for m in moves {
             let origFrame = tiles[m.from.row][m.from.col].frame
             let finalFrame = tiles[m.to.row][m.to.col].frame
+            
             UIView.animate(withDuration: TimeInterval(slideTime),
                                        delay: 0.0,
-                                       options: UIViewAnimationOptions.beginFromCurrentState,
                                        animations: {
                                         // Slide tile
                                         self.tiles[m.from.row][m.from.col].frame = finalFrame
@@ -109,10 +111,13 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
                                         self.displayTiles(m: m, f: origFrame)
                                         self.showNewTile()
                                         if(m.merge) {
-                                           self.mergeAnimation(m: m)
+                                            if(self.GameModel.tiles[m.to.row][m.to.col] == 2048) {
+                                            self.userWon()
+                                            }
+                                            self.mergeAnimation(m: m)
                                         }
             })
-        }
+     }
     }
 
     func displayTiles(m: Model.Move, f: CGRect) {
@@ -156,19 +161,19 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
-                print("Swiped right")
+                //print("Swiped right")
                 doMove(dx: 1, dy: 0)
                 break
             case UISwipeGestureRecognizerDirection.down:
-                print("Swiped down")
+                //print("Swiped down")
                 doMove(dx: 0, dy: 1)
                 break
             case UISwipeGestureRecognizerDirection.left:
-                print("Swiped left")
+                //print("Swiped left")
                 doMove(dx: -1, dy: 0)
                 break
             case UISwipeGestureRecognizerDirection.up:
-                print("Swiped up")
+               // print("Swiped up")
                 doMove(dx: 0, dy: -1)
                 break
             default:
@@ -181,11 +186,19 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
         return 16
     }
 
-    func gameOver() {
-        let alert = UIAlertController(title: "Game Over", message: "Would you like to try again ?", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Continue", style: UIAlertActionStyle.default, handler: {(action:UIAlertAction) in
+    func userWon() {
+        let alert = UIAlertController(title: "You are the king of the World", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Worthy", style: UIAlertActionStyle.default, handler: {(action:UIAlertAction) in
             self.reset() }));
-        alert.addAction(UIAlertAction(title: "Exit", style: UIAlertActionStyle.default, handler: {(action:UIAlertAction) in exit(0) }));
+        alert.addAction(UIAlertAction(title: "Not worthy", style: UIAlertActionStyle.default, handler: {(action:UIAlertAction) in exit(0) }));
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func gameOver() {
+        let alert = UIAlertController(title: "YOU LOST !!!", message: "Would you like to try again ?", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Retry", style: UIAlertActionStyle.default, handler: {(action:UIAlertAction) in
+            self.reset() }));
+        alert.addAction(UIAlertAction(title: "Defeated", style: UIAlertActionStyle.default, handler: {(action:UIAlertAction) in exit(0) }));
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -202,11 +215,18 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
         
     }
     
+    func tapped() {
+        let d = auto.bestMove(g: GameModel, depth: 2)
+        if let a = d { 
+            doMove(dx: a.dx, dy: a.dy)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! TileView
         cell.layer.masksToBounds = true
-        cell.layer.cornerRadius = 6
+        cell.layer.cornerRadius = radius
         
         let col = indexPath.item % 4
         let row = (indexPath.item - col) / 4
@@ -215,18 +235,27 @@ class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICo
         return cell
     }
 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 70, left: 10, bottom: 0, right: 10)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headerView", for: indexPath) as! HeaderView
         
         headerView.frame.size.height = 100
         headerview = headerView
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        //tap.numberOfTapsRequired = 3
+        headerView.scoreLabel.addGestureRecognizer(tap)
+        
         return headerView
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let separator: CGFloat = 6.0 * 3.0
-        let size = (view.frame.width - separator) / 4.0
+        let size = (view.frame.width - separator - 20) / 4.0
         return CGSize(width: size, height: size)
     }
     

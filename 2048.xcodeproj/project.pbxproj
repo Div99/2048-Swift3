@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FC23CD301DE8EA0B00BC3705 /* AppearanceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC23CD2F1DE8EA0B00BC3705 /* AppearanceProvider.swift */; };
+		FC2AF3581DEE8D4400FC8781 /* AutoMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2AF3571DEE8D4400FC8781 /* AutoMove.swift */; };
 		FC6EF7111DEE26DA00049148 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6EF7101DEE26DA00049148 /* HeaderView.swift */; };
 		FC9984061DECA42C00F99DA9 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9984051DECA42C00F99DA9 /* Model.swift */; };
 		FCCCB7241DE6237E00D8FAC0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCCB7231DE6237E00D8FAC0 /* AppDelegate.swift */; };
@@ -19,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		FC23CD2F1DE8EA0B00BC3705 /* AppearanceProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceProvider.swift; sourceTree = "<group>"; };
+		FC2AF3571DEE8D4400FC8781 /* AutoMove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoMove.swift; sourceTree = "<group>"; };
 		FC6EF7101DEE26DA00049148 /* HeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		FC9984051DECA42C00F99DA9 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		FCCCB7201DE6237E00D8FAC0 /* 2048.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2048.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +67,7 @@
 				FCCCB73B1DE628B400D8FAC0 /* TileView.swift */,
 				FC9984051DECA42C00F99DA9 /* Model.swift */,
 				FC23CD2F1DE8EA0B00BC3705 /* AppearanceProvider.swift */,
+				FC2AF3571DEE8D4400FC8781 /* AutoMove.swift */,
 				FC6EF7101DEE26DA00049148 /* HeaderView.swift */,
 				FCCCB73D1DE628E200D8FAC0 /* ViewController.swift */,
 				FCCCB72C1DE6237E00D8FAC0 /* LaunchScreen.storyboard */,
@@ -149,6 +152,7 @@
 				FC6EF7111DEE26DA00049148 /* HeaderView.swift in Sources */,
 				FCCCB73E1DE628E200D8FAC0 /* ViewController.swift in Sources */,
 				FCCCB73C1DE628B400D8FAC0 /* TileView.swift in Sources */,
+				FC2AF3581DEE8D4400FC8781 /* AutoMove.swift in Sources */,
 				FC23CD301DE8EA0B00BC3705 /* AppearanceProvider.swift in Sources */,
 				FCCCB7241DE6237E00D8FAC0 /* AppDelegate.swift in Sources */,
 			);

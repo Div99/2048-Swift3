@@ -1,2 +1,5 @@
 # 2048-Swift3
-Swift3 implementation of 2048 using UICollectionView
+iOS implementation of 2048 in Swift3 using UICollectionView
+
+Added BestMove feature which automatically finds and performs the best move.
+
